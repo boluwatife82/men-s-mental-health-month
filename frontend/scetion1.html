@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="What burden are you carrying today? You are not alone."/>
+  <meta name="theme-color" content="#09090b"/>
+  <title>You Are Not Alone — Men's Mental Health</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@300;400;500&family=Special+Elite&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/section1.css"/>
+</head>
+<body>
+
+  <div id="sr-live" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ======================================================
+       SECTION 1 — OPENING EXPERIENCE
+  ====================================================== -->
+  <section id="s1" aria-label="Opening Experience — What burden are you carrying today?">
+
+    <div class="s1-photo" role="img" aria-label="Silhouette of a man in darkness">
+      <!--
+        REPLACE src with your own image.
+        Dark dramatic man silhouette, side profile, cinematic lighting.
+        Recommended: high-contrast, dark bg, man facing right or 3/4 profile.
+      -->
+      <img id="hero-img"
+           src="I Will Never Give Up, No, No way I keep Pushing….jpg"
+           alt="" aria-hidden="true" loading="eager" decoding="async"
+           onerror="this.parentElement.style.background='linear-gradient(135deg,#09090b,#141420 45%,#1c1c2e 75%,#09090b)';this.style.display='none';"/>
+    </div>
+
+     <div class="s1-content">
+      <p class="s1-eyebrow" aria-hidden="true">Every man has a story</p>
+      <h1 class="s1-headline" aria-label="What burden are you carrying today?">
+        The world sees the man<br />
+        <span class="accent">Nobody sees the weight.</span>
+      </h1>
+      <p class="s1-tagline">You are not alone my guy!!!.</p>
+    </div>
+
+    <div class="s1-scroll" role="button" tabindex="0" aria-label="Scroll to begin — choose your burden">
+      <div class="s1-arrow" aria-hidden="true">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor"
+             stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="4,6 10,13 16,6"/>
+        </svg>
+      </div>
+      <span class="s1-scroll-label" aria-hidden="true">Scroll to begin</span>
+    </div>
+
+  </section>
+
+
+  <!-- ======================================================
+       SECTION 2 — CHOOSE YOUR BURDEN
+  ====================================================== -->
+  <section id="s2" aria-labelledby="s2-heading">
+    <span class="section-tag" aria-hidden="true">2. Choose Your Burden</span>
+
+    <h2 id="s2-heading" class="s2-headline">
+      What burden<br/>are you carrying <span class="accent">today?</span>
+    </h2>
+    <p class="s2-sub">Choose one that feels heaviest right now.</p>
+
+    <div class="burden-grid" role="listbox"
+         aria-label="Select the burden you are carrying" id="burden-grid">
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="financial" aria-label="Financial Pressure">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>
+          <path d="M12 6v2m0 8v2M9.5 9.5a2.5 2.5 0 0 1 5 0c0 1.5-1 2-2.5 2.5S9.5 15 9.5 16"/></svg>
+        </span>
+        <span class="b-label">Financial<br/>Pressure</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="family" aria-label="Family Expectations">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M17 20H7v-1a5 5 0 0 1 5-5v0a5 5 0 0 1 5 5v1Z"/>
+          <circle cx="12" cy="9" r="3"/>
+          <path d="M21 20h-2v-1a4 4 0 0 0-4-4M3 20h2v-1a4 4 0 0 1 4-4"/>
+          <circle cx="7" cy="8" r="2.5"/><circle cx="17" cy="8" r="2.5"/></svg>
+        </span>
+        <span class="b-label">Family<br/>Expectations</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="loneliness" aria-label="Loneliness">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>
+          <path d="M12 3v9l5 3"/></svg>
+        </span>
+        <span class="b-label">Loneliness</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="relationship" aria-label="Relationship Pain">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+          <path d="M12 20s-7-4.35-7-9a5 5 0 0 1 7-4.58A5 5 0 0 1 19 11c0 4.65-7 9-7 9Z"/>
+          <line x1="12" y1="20" x2="12" y2="12"/><line x1="8" y1="14" x2="12" y2="12"/></svg>
+        </span>
+        <span class="b-label">Relationship<br/>Pain</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="career" aria-label="Career Pressure">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/>
+          <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+          <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </span>
+        <span class="b-label">Career<br/>Pressure</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="grief" aria-label="Grief">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+          <path d="M12 20s-7-4.35-7-9a5 5 0 0 1 10 0"/>
+          <line x1="16" y1="10" x2="22" y2="10"/><line x1="19" y1="7" x2="19" y2="13"/></svg>
+        </span>
+        <span class="b-label">Grief</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="selfdoubt" aria-label="Self Doubt">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+          <circle cx="12" cy="17" r="0.8" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="b-label">Self Doubt</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="lost" aria-label="Feeling Lost">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>
+          <polygon points="12,3 14.5,9.5 21,12 14.5,14.5 12,21 9.5,14.5 3,12 9.5,9.5"/></svg>
+        </span>
+        <span class="b-label">Feeling<br/>Lost</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="fatherhood" aria-label="Fatherhood">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/>
+          <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+          <path d="M9 13l2 2 4-4"/></svg>
+        </span>
+        <span class="b-label">Fatherhood</span>
+      </button>
+
+      <button class="b-card" role="option" aria-selected="false" data-burden="other" aria-label="Other">
+        <span class="b-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/>
+          <circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="8"  cy="12" r="1" fill="currentColor" stroke="none"/>
+          <circle cx="16" cy="12" r="1" fill="currentColor" stroke="none"/></svg>
+        </span>
+        <span class="b-label">Other</span>
+      </button>
+
+    </div>
+
+    <p class="s2-anon" role="note">Your answer is anonymous. Your story matters.</p>
+  </section>
+
+
+  <!-- ======================================================
+       SECTION 3 — THE WEIGHT WE CARRY
+  ====================================================== -->
+  <section id="s3" aria-labelledby="s3-heading">
+    <span class="section-tag" aria-hidden="true">3. The Weight We Carry</span>
+
+    <!-- LEFT: sticky stat panel -->
+    <div class="s3-left" aria-label="You are not the only one">
+      <h2 id="s3-heading" class="s3-headline">
+        You're not<br/>the <span class="accent">only one.</span>
+      </h2>
+
+      <div class="s3-dot" aria-hidden="true"></div>
+
+      <p class="s3-count-line">
+        <strong id="burden-count">18,742</strong> men are<br/>
+        carrying this burden<br/>right now.
+      </p>
+
+      <p class="s3-sub-line">2
+        Real stories from<br/>real men. Anonymous.
+      </p>
+
+      <!--
+        LIVE FEED — when Section 5 submissions come in
+        they float up here as short quotes
+      -->
+      <div class="s3-live-feed" id="s3-live-feed" aria-hidden="true"></div>
+    </div>
+
+    <!-- RIGHT: story cards -->
+    <div class="s3-right" id="stories-panel"
+         aria-label="Anonymous stories from men" aria-live="polite">
+    </div>
+
+  </section>
+
+
+  <!-- ======================================================
+       SECTION 4 — LETTERS TO MEN
+  ====================================================== -->
+  <section id="s4" aria-labelledby="s4-heading">
+    <span class="section-tag" aria-hidden="true">4. Letters To Men</span>
+
+    <div class="s4-left">
+      <h2 id="s4-heading" class="s4-headline">
+        A letter<br/>for <span class="accent">you.</span>
+      </h2>
+      <p class="s4-sub">Words you need to<br/>hear right now.</p>
+      <button class="open-letter-btn" id="open-letter-btn"
+              aria-haspopup="dialog" aria-expanded="false">
+        Open Letter
+      </button>
+    </div>
+
+    <div class="s4-right">
+      <div class="envelope-wrap" id="env-wrap"
+           role="button" tabindex="0"
+           aria-label="A sealed envelope — click to open your letter.">
+        <!--
+          REPLACE src with your envelope photo.
+          Dark background, envelope/letter, cinematic lighting.
+          e.g. src="assets/envelope.jpg"
+        -->
+        <img class="envelope-photo" id="env-img"
+             src="Letters3.jpg"
+             alt="" aria-hidden="true" loading="lazy"
+             onerror="this.style.display='none';this.parentElement.style.background='linear-gradient(135deg,#1a1208,#2a1e0e 50%,#1a1208)';"/>
+        <div class="envelope-overlay" aria-hidden="true">
+          <span class="env-to"   id="env-to-label">To the man</span>
+          <span class="env-main" id="env-main-label">carrying<br/>everyone</span>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ======================================================
+       SECTION 5 — IF MEN WERE HONEST
+  ====================================================== -->
+  <section id="s5" aria-labelledby="s5-heading">
+    <span class="section-tag" aria-hidden="true">5. If Men Were Honest</span>
+
+    <!--
+      Background: dark atmospheric sky/silhouette image
+      REPLACE src with your own. Moody sky, man silhouette, stormy clouds.
+      e.g. src="assets/sky-man.jpg"
+    -->
+    <div class="s5-bg" aria-hidden="true">
+      <img src="7036943163695780.jpg" alt=""
+           onerror="this.parentElement.style.background='linear-gradient(160deg,#09090b 0%,#0d0d18 40%,#111122 70%,#09090b 100%)';this.style.display='none';"/>
+    </div>
+
+    <div class="s5-content">
+
+      <!-- Prompt nav dots -->
+      <div class="s5-prompt-nav" aria-hidden="true">
+        <button class="s5-prompt-dot active" aria-label="Prompt 1"></button>
+        <button class="s5-prompt-dot"        aria-label="Prompt 2"></button>
+        <button class="s5-prompt-dot"        aria-label="Prompt 3"></button>
+        <button class="s5-prompt-dot"        aria-label="Prompt 4"></button>
+        <button class="s5-prompt-dot"        aria-label="Prompt 5"></button>
+      </div>
+
+      <!-- Rotating headline prompt -->
+      <h2 id="s5-heading" class="s5-prompt" aria-live="polite">
+        What do you wish someone<br/>understood about <span class="accent">you?</span>
+      </h2>
+
+      <p class="s5-sub">Be honest. This is a safe space.</p>
+
+      <!-- Textarea -->
+      <div class="s5-textarea-wrap">
+        <textarea
+          id="s5-textarea"
+          class="s5-textarea"
+          placeholder="Type your truth here…"
+          maxlength="500"
+          rows="5"
+          aria-label="Write your truth anonymously"
+          aria-describedby="s5-char-count s5-anon"></textarea>
+      </div>
+
+      <div class="s5-form-footer">
+        <span id="s5-char-count" class="s5-char-count" aria-live="polite">0/500</span>
+        <span id="s5-anon" class="s5-anon-note">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round"
+               aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+          Completely anonymous
+        </span>
+        <button id="s5-submit-btn" class="s5-submit-btn" disabled
+                aria-label="Share your truth anonymously">
+          <span>Share anonymously</span>
+          <span aria-hidden="true">→</span>
+        </button>
+      </div>
+
+      <!-- Success message -->
+      <div id="s5-success" class="s5-success" role="status">
+        <strong>Your truth has been heard.</strong><br/>
+        It will reach another man carrying the same burden.<br/>
+        You just made someone feel less alone.
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+     SECTION 6 HTML — paste into your index.html after section 5
+============================================================ -->
+<section id="s6" aria-labelledby="s6-heading">
+  <span class="section-tag" aria-hidden="true">6. The Message You Needed</span>
+ 
+  <!-- Left -->
+  <div class="s6-left">
+    <h2 id="s6-heading" class="s6-headline">
+      A message<br/>for <span class="accent">you.</span>
+    </h2>
+    <p class="s6-sub">
+      From another man<br/>who gets it.
+    </p>
+    <button class="s6-refresh-btn" id="s6-refresh-btn"
+            aria-label="Show me a different message">
+      <span>Give me another</span>
+      <span class="refresh-icon" aria-hidden="true">↻</span>
+    </button>
+  </div>
+ 
+  <!-- Right: message card -->
+  <div class="s6-right">
+    <div id="s6-card-wrap">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+ 
+</section>
+ 
+ 
+<!-- ============================================================
+     SECTION 7 HTML — paste into your index.html after section 6
+============================================================ -->
+<section id="s7" aria-labelledby="s7-heading">
+  <span class="section-tag" aria-hidden="true">7. Leave Something Behind</span>
+ 
+  <!-- Background image placeholder -->
+  <div class="s7-bg" aria-hidden="true">
+    <!--
+      REPLACE src with a photo of a man walking toward a light/doorway.
+      Dark, cinematic, atmospheric. e.g. src="assets/man-doorway.jpg"
+    -->
+    <img src="Moody black and white silhouette of a person in a….jpg" alt=""
+         onerror="this.parentElement.style.background='linear-gradient(135deg,#09090b,#0d0d15 50%,#09090b)';this.style.display='none';"/>
+  </div>
+ 
+  <div class="s7-content">
+ 
+    <h2 id="s7-heading" class="s7-headline">
+      Leave a word.<br/>Change a <span class="accent">life.</span>
+    </h2>
+ 
+    <p class="s7-sub">
+      Your words could be exactly what<br/>another man needs to hear.
+    </p>
+ 
+    <!-- Shows which burden their message will reach -->
+    <div class="s7-burden-context" id="s7-burden-context" aria-live="polite">
+      <div class="ctx-dot" aria-hidden="true"></div>
+      <span>Your message will reach men carrying</span>
+      <span class="ctx-label" id="s7-burden-label">financial pressure</span>
+    </div>
+ 
+    <textarea
+      id="s7-textarea"
+      class="s7-textarea"
+      placeholder="Write your message here…"
+      maxlength="300"
+      rows="4"
+      aria-label="Leave a message for another man carrying the same burden"
+      aria-describedby="s7-char-count"></textarea>
+ 
+    <div class="s7-form-footer">
+      <span id="s7-char-count" class="s7-char-count" aria-live="polite">0/300</span>
+      <button id="s7-submit-btn" class="s7-submit-btn" disabled
+              aria-label="Leave your message behind">
+        <span>Leave it behind</span>
+        <span class="s7-arrow-icon" aria-hidden="true">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+               stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="5" y1="12" x2="19" y2="12"/>
+            <polyline points="12,5 19,12 12,19"/>
+          </svg>
+        </span>
+      </button>
+    </div>
+ 
+    <div id="s7-success" class="s7-success" role="status" aria-live="polite">
+      <strong>Left behind.</strong><br/>
+      Another man carrying the same burden will find it.<br/>
+      You just made someone feel less alone.
+    </div>
+ 
+  </div>
+</section>
+
+
+
+<section id="s8" aria-label="The Silent Room — Thousands of unspoken thoughts. One shared silence.">
+ 
+  <!-- Canvas: Three.js scene -->
+  <canvas id="silent-canvas" aria-hidden="true"></canvas>
+ 
+  <!-- Man silhouette in centre -->
+<div id="s8-man" role="img" aria-label="A man standing alone">
+  <img 
+    src="back_stage_pose_of_a_man-removebg-preview.png" 
+    alt=""
+    style="width:100%; height:100%; object-fit:contain; object-position:bottom;"
+  />
+</div>
+
+ 
+  <!-- Intro screen -->
+  <div id="s8-intro" aria-hidden="true">
+    <h2 class="intro-title">The <span class="blue">Silent</span> Room</h2>
+    <p class="intro-sub">Thousands of unspoken thoughts. One shared silence.</p>
+  </div>
+ 
+  <!-- Top-left section tag -->
+  <span id="s8-tag" aria-hidden="true">8. The Silent Room</span>
+ 
+  <!-- Top-right timer -->
+  <span id="s8-timer" aria-hidden="true"></span>
+ 
+  <!-- Bottom-left UI -->
+  <div id="s8-ui">
+    <h2 class="s8-headline">
+      The <span class="blue">Silent</span> Room
+    </h2>
+    <p class="s8-tagline">
+      Thousands of unspoken thoughts.<br/>One shared silence.
+    </p>
+    <button id="s8-pause" aria-pressed="false">
+      Stay a while &nbsp;&#9646;&#9646;
+    </button>
+  </div>
+
+  <!-- Closing screen — mirrors the opening intro -->
+<div id="s8-outro" aria-live="polite">
+  <h2 class="outro-title">Thank you<br/><span class="accent">for staying.</span></h2>
+  <p class="outro-sub">
+    Thousands of men sat here with you tonight.<br/>
+    None of them were alone. Neither were you.
+  </p>
+  <div class="outro-divider"></div>
+  <p class="outro-contact">
+    For the man reading this — if today feels heavy<br/>
+    and you need someone to listen, I'm here.
+  </p>
+  <a class="outro-email" href="mailto:boluwatifeafolayan82@gmail.com">
+    boluwatifeafolayan82@gmail.com
+  </a>
+</div>
+ 
+  <!-- Thank you — appears after 10 min -->
+  <div id="s8-thankyou" aria-live="polite">Thank you for staying.</div>
+ 
+  <!-- Custom cursor -->
+  <div id="s8-cursor" aria-hidden="true"></div>
+ 
+  <!-- SR message list -->
+  <ul id="s8-sr-msgs" class="sr-only" aria-label="Messages in the silent room"></ul>
+ 
+</section>
+ 
+<!-- Three.js r128 -->
+
+ 
+
+
+  <!-- ======================================================
+       LETTER READ MODAL
+  ====================================================== -->
+  <div class="letter-overlay" id="letter-overlay"
+       role="dialog" aria-modal="true"
+       aria-labelledby="letter-modal-title" aria-hidden="true">
+    <div class="letter-paper" id="letter-paper-el">
+      <button class="modal-close" id="letter-close-btn" aria-label="Close letter">✕</button>
+      <div class="letter-source-badge" aria-hidden="true">
+        <div class="badge-dot"></div>
+        <span id="badge-text">From the letter bank</span>
+      </div>
+      <div class="letter-title-text" id="letter-modal-title">Loading...</div>
+      <div class="letter-body-text"  id="letter-modal-body"></div>
+      <div class="letter-from"       id="letter-modal-from"></div>
+      <div class="letter-actions">
+        <button class="letter-heart-btn" id="letter-heart-btn"
+                aria-label="This letter resonated with me">
+          <span class="heart-icon">♡</span>
+          <span id="heart-count">0</span>
+        </button>
+        <button class="letter-next-btn" id="letter-next-btn"
+                aria-label="Read a different letter">
+          Another letter →
+        </button>
+      </div>
+      <button class="write-letter-link" id="write-letter-trigger"
+              aria-label="Write an anonymous letter for this burden">
+        Write a letter for another man carrying this →
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ======================================================
+       WRITE A LETTER MODAL
+  ====================================================== -->
+  <div class="write-overlay" id="write-overlay"
+       role="dialog" aria-modal="true"
+       aria-labelledby="write-modal-title" aria-hidden="true">
+    <div class="write-modal">
+      <button class="modal-close" id="write-close-btn" aria-label="Close">✕</button>
+
+      <div id="write-form-content">
+        <h2 id="write-modal-title" class="write-title">
+          Write a letter<br/>for <span class="accent">another man.</span>
+        </h2>
+        <p class="write-subtitle">
+          Your words could be exactly what someone needs to read tonight.
+          It's completely anonymous.
+        </p>
+
+        <label class="field-label" for="write-title-input">Letter title</label>
+        <input class="write-input" id="write-title-input" type="text"
+               placeholder="e.g. To The Man Who Can't Sleep…"
+               maxlength="100" autocomplete="off"/>
+
+        <label class="field-label" for="write-body-input">Your letter</label>
+        <textarea class="write-textarea" id="write-body-input"
+                  placeholder="Write from the heart. You don't need to have it figured out…"
+                  maxlength="2000"></textarea>
+
+        <label class="field-label" for="write-from-input">Sign as (optional)</label>
+        <input class="write-input" id="write-from-input" type="text"
+               placeholder="e.g. A fellow provider, Anonymous…"
+               maxlength="60" autocomplete="off"/>
+
+        <div class="write-footer">
+          <span class="write-anon-note">Completely anonymous</span>
+          <button class="write-submit-btn" id="write-submit-btn">Send this letter</button>
+        </div>
+      </div>
+
+      <div class="write-success" id="write-success-msg" aria-live="polite">
+        <span class="check">✓</span>
+        <strong>Your letter has been received.</strong><br/>
+        After a brief review, it will find its way to<br/>another man who needs it.
+      </div>
+    </div>
+  </div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+ 
+
+
+  <script src="js/api.js"></script>
+  <script src="js/section1.js"></script>
+</body>
+</html>
