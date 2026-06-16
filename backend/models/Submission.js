@@ -1,34 +1,32 @@
 /* ============================================================
-   Submission.js — "If Men Were Honest" entries (Section 5)
-   Stored separately from stories — can be promoted later
+   Submission.js — PostgreSQL
 ============================================================ */
-const db = require('../config/db');
+const pool = require('../config/db');
 
 const Submission = {
 
-  /* Save a new honest submission */
-  create({ content, burden }) {
-    const result = db.prepare(`
-      INSERT INTO submissions (content, burden)
-      VALUES (?, ?)
-    `).run(content.trim(), burden);
-    return { id: result.lastInsertRowid };
+  async create({ content, burden }) {
+    const { rows } = await pool.query(
+      `INSERT INTO submissions (content, burden)
+       VALUES ($1, $2) RETURNING id`,
+      [content.trim(), burden]
+    );
+    return { id: rows[0].id };
   },
 
-  /* Get recent submissions for a burden (for live feed) */
-  getRecent(burden, limit = 5) {
-    return db.prepare(`
-      SELECT id, content, burden, created_at
-      FROM   submissions
-      WHERE  burden = ?
-      ORDER  BY created_at DESC
-      LIMIT  ?
-    `).all(burden, limit);
+  async getRecent(burden, limit = 5) {
+    const { rows } = await pool.query(
+      `SELECT id, content, burden, created_at
+       FROM submissions WHERE burden = $1
+       ORDER BY created_at DESC LIMIT $2`,
+      [burden, limit]
+    );
+    return rows;
   },
 
-  /* Get total submission count */
-  count() {
-    return db.prepare(`SELECT COUNT(*) as total FROM submissions`).get().total;
+  async count() {
+    const { rows } = await pool.query(`SELECT COUNT(*) as total FROM submissions`);
+    return parseInt(rows[0].total);
   },
 
 };

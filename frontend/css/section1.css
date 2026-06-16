@@ -1568,3 +1568,66 @@ body { background: var(--black); color: var(--white); font-family: var(--font-b)
   }
 
 }
+
+/* ============================================================
+   SECTION 3 — "There's more to carry" load more button
+============================================================ */
+.s3-load-more-wrap {
+  display: flex;
+  justify-content: center;
+  padding: clamp(28px, 4vh, 44px) 0 8px;
+}
+
+.s3-load-more-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 1px solid rgba(200,160,80,0.25);
+  color: var(--accent);
+  font-family: var(--font-b);
+  font-size: clamp(11px, 1.1vw, 13px);
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 30px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background 0.3s ease,
+              color 0.3s ease, transform 0.2s ease;
+}
+
+.s3-load-more-btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  transform: translateY(-1px);
+}
+
+.s3-load-more-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.s3-load-more-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.s3-load-more-btn:hover:not(:disabled) .s3-load-more-arrow {
+  transform: translateY(2px);
+}
+
+/* When all stories have been read */
+.s3-load-more-btn:disabled {
+  border-color: rgba(255,255,255,0.08);
+  color: var(--white-muted);
+  cursor: default;
+  font-style: italic;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  font-size: clamp(12px, 1.2vw, 14px);
+}
+
+.s3-load-more-wrap.exhausted {
+  padding-bottom: clamp(40px, 6vh, 60px);
+}

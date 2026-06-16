@@ -2,14 +2,15 @@
    routes/submissions.js
    POST /api/submissions   — "If Men Were Honest" (Section 5)
    GET  /api/submissions/recent?burden=fin — live feed
-   GET  /api/stats         — total count for homepage stats
+   GET  /api/submissions/stats — total count
 ============================================================ */
 const router     = require('express').Router();
 const Submission = require('../models/Submission');
+const Story      = require('../models/Story');
 const { submitLimit } = require('../middleware/rateLimit');
 
 /* POST an honest submission */
-router.post('/', submitLimit, (req, res) => {
+router.post('/', submitLimit, async (req, res) => {
   try {
     const { content, burden } = req.body;
 
@@ -19,7 +20,12 @@ router.post('/', submitLimit, (req, res) => {
     if (content.length > 500)
       return res.status(400).json({ ok: false, error: 'Too long.' });
 
-    const result = Submission.create({ content, burden });
+    /* Save to submissions table (record keeping) */
+    const result = await Submission.create({ content, burden });
+
+    /* Also add it directly to stories — shows immediately in Section 3 */
+    await Story.create({ content, burden, country: 'Anonymous' });
+
     res.status(201).json({
       ok: true,
       id: result.id,
@@ -30,21 +36,21 @@ router.post('/', submitLimit, (req, res) => {
   }
 });
 
-/* GET recent submissions for live feed in Section 3 */
-router.get('/recent', (req, res) => {
+/* GET recent submissions for live feed */
+router.get('/recent', async (req, res) => {
   try {
     const { burden = 'financial', limit = 5 } = req.query;
-    const data = Submission.getRecent(burden, parseInt(limit));
+    const data = await Submission.getRecent(burden, parseInt(limit));
     res.json({ ok: true, data });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
   }
 });
 
-/* GET total submission count (for stats) */
-router.get('/stats', (req, res) => {
+/* GET total submission count */
+router.get('/stats', async (req, res) => {
   try {
-    const total = Submission.count();
+    const total = await Submission.count();
     res.json({ ok: true, total });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });

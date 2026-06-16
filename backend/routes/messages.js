@@ -15,10 +15,10 @@ function hashIP(ip) {
 }
 
 /* GET one random message by burden */
-router.get('/random', (req, res) => {
+router.get('/random', async (req, res) => {
   try {
     const { burden = 'financial', exclude } = req.query;
-    const msg = Message.getRandom(burden, exclude ? parseInt(exclude) : null);
+    const msg = await Message.getRandom(burden, exclude ? parseInt(exclude) : null);
     if (!msg) return res.status(404).json({ ok: false, error: 'No message found.' });
     res.json({ ok: true, data: msg });
   } catch (err) {
@@ -27,10 +27,10 @@ router.get('/random', (req, res) => {
 });
 
 /* GET all messages for Silent Room */
-router.get('/all', (req, res) => {
+router.get('/all', async (req, res) => {
   try {
     const { limit = 60 } = req.query;
-    const messages = Message.getAll(parseInt(limit));
+    const messages = await Message.getAll(parseInt(limit));
     res.json({ ok: true, data: messages });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
@@ -38,7 +38,7 @@ router.get('/all', (req, res) => {
 });
 
 /* POST leave a message */
-router.post('/', submitLimit, (req, res) => {
+router.post('/', submitLimit, async (req, res) => {
   try {
     const { content, burden } = req.body;
 
@@ -48,7 +48,7 @@ router.post('/', submitLimit, (req, res) => {
     if (content.length > 300)
       return res.status(400).json({ ok: false, error: 'Message is too long.' });
 
-    const result = Message.create({ content, burden });
+    const result = await Message.create({ content, burden });
     res.status(201).json({
       ok: true,
       id: result.id,
@@ -60,11 +60,11 @@ router.post('/', submitLimit, (req, res) => {
 });
 
 /* POST heart a message */
-router.post('/:id/heart', heartLimit, (req, res) => {
+router.post('/:id/heart', heartLimit, async (req, res) => {
   try {
     const messageId = parseInt(req.params.id);
     const ipHash    = hashIP(req.ip);
-    const result    = Message.addHeart(messageId, ipHash);
+    const result    = await Message.addHeart(messageId, ipHash);
     res.json(result);
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });

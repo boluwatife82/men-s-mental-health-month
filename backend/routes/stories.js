@@ -1,18 +1,12 @@
-/* ============================================================
-   routes/stories.js
-   GET  /api/stories?burden=financial   — fetch stories
-   POST /api/stories                    — submit a story
-   GET  /api/stories/count?burden=fin   — live counter
-============================================================ */
 const router = require('express').Router();
 const Story  = require('../models/Story');
 const { submitLimit } = require('../middleware/rateLimit');
 
 /* GET stories by burden */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { burden = 'financial', limit = 20 } = req.query;
-    const stories = Story.getByBurden(burden, parseInt(limit));
+    const stories = await Story.getByBurden(burden, parseInt(limit));
     res.json({ ok: true, data: stories });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
@@ -20,10 +14,10 @@ router.get('/', (req, res) => {
 });
 
 /* GET live count for a burden */
-router.get('/count', (req, res) => {
+router.get('/count', async (req, res) => {
   try {
     const { burden = 'financial' } = req.query;
-    const total = Story.countByBurden(burden);
+    const total = await Story.countByBurden(burden);
     res.json({ ok: true, burden, total });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
@@ -31,7 +25,7 @@ router.get('/count', (req, res) => {
 });
 
 /* POST a new anonymous story */
-router.post('/', submitLimit, (req, res) => {
+router.post('/', submitLimit, async (req, res) => {
   try {
     const { content, burden, country = 'Anonymous' } = req.body;
 
@@ -41,7 +35,7 @@ router.post('/', submitLimit, (req, res) => {
     if (content.length > 500)
       return res.status(400).json({ ok: false, error: 'Story is too long.' });
 
-    const result = Story.create({ content, burden, country });
+    const result = await Story.create({ content, burden, country });
     res.status(201).json({
       ok: true,
       id: result.id,

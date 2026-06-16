@@ -1,69 +1,78 @@
 /* ============================================================
-   Letter.js — data access for letters table
+   Letter.js — PostgreSQL
 ============================================================ */
-const db = require('../config/db');
+const pool = require('../config/db');
 
 const Letter = {
 
-  /* Get all approved letters for a burden */
-  getByBurden(burden) {
-    const rows = db.prepare(`
-      SELECT id, title, body, from_line, burden, source, hearts, created_at
-      FROM   letters
-      WHERE  burden = ? AND approved = 1
-      ORDER  BY hearts DESC
-    `).all(burden);
-
-    /* Parse body from JSON string back to array */
-    return rows.map(r => ({ ...r, body: JSON.parse(r.body) }));
+  async getByBurden(burden) {
+    const { rows } = await pool.query(
+      `SELECT id, title, body, from_line, burden, source, hearts, created_at
+       FROM letters WHERE burden = $1 AND approved = true
+       ORDER BY hearts DESC`,
+      [burden]
+    );
+    return rows;
   },
 
-  /* Get one random letter for a burden, optionally excluding one id */
-  getRandom(burden, excludeId = null) {
+  async getRandom(burden, excludeId = null) {
     const query = excludeId
       ? `SELECT id, title, body, from_line, burden, source, hearts
-         FROM letters WHERE burden = ? AND approved = 1 AND id != ?
+         FROM letters WHERE burden = $1 AND approved = true AND id != $2
          ORDER BY RANDOM() LIMIT 1`
       : `SELECT id, title, body, from_line, burden, source, hearts
-         FROM letters WHERE burden = ? AND approved = 1
+         FROM letters WHERE burden = $1 AND approved = true
          ORDER BY RANDOM() LIMIT 1`;
 
     const params = excludeId ? [burden, excludeId] : [burden];
-    const row    = db.prepare(query).get(...params);
-    if (!row) return null;
-    return { ...row, body: JSON.parse(row.body) };
+    const { rows } = await pool.query(query, params);
+
+    /* fallback — if exclude left nothing, get any letter */
+    if (!rows[0] && excludeId) {
+      const fallback = await pool.query(
+        `SELECT id, title, body, from_line, burden, source, hearts
+         FROM letters WHERE burden = $1 AND approved = true
+         ORDER BY RANDOM() LIMIT 1`,
+        [burden]
+      );
+      return fallback.rows[0] || null;
+    }
+
+    return rows[0] || null;
   },
 
-  /* Add a heart — returns false if already hearted by this IP */
-  addHeart(letterId, ipHash) {
+  async addHeart(letterId, ipHash) {
+    const client = await pool.connect();
     try {
-      db.prepare(`
-        INSERT INTO letter_hearts (letter_id, ip_hash) VALUES (?, ?)
-      `).run(letterId, ipHash);
-      const updated = db.prepare(`
-        UPDATE letters SET hearts = hearts + 1 WHERE id = ?
-      `).run(letterId);
-      const row = db.prepare(`SELECT hearts FROM letters WHERE id = ?`).get(letterId);
-      return { ok: true, hearts: row.hearts };
-    } catch {
-      /* PRIMARY KEY violation = already hearted */
-      return { ok: false, reason: 'already_hearted' };
+      await client.query(
+        `INSERT INTO letter_hearts (letter_id, ip_hash) VALUES ($1, $2)`,
+        [letterId, ipHash]
+      );
+      const { rows } = await client.query(
+        `UPDATE letters SET hearts = hearts + 1 WHERE id = $1 RETURNING hearts`,
+        [letterId]
+      );
+      return { ok: true, hearts: rows[0].hearts };
+    } catch (err) {
+      /* unique violation = already hearted */
+      if (err.code === '23505') return { ok: false, reason: 'already_hearted' };
+      throw err;
+    } finally {
+      client.release();
     }
   },
 
-  /* Create a new community letter (unapproved) */
-  create({ title, body, from_line = 'Anonymous', burden }) {
-    const stmt = db.prepare(`
-      INSERT INTO letters (title, body, from_line, burden, source, approved)
-      VALUES (?, ?, ?, ?, 'community', 0)
-    `);
-    const result = stmt.run(
-      title.trim(),
-      JSON.stringify(body),
-      from_line.trim(),
-      burden
+  async create({ title, body, from_line = 'Anonymous', burden }) {
+    const paragraphs = Array.isArray(body)
+      ? body
+      : body.split('\n').map(p => p.trim()).filter(Boolean);
+
+    const { rows } = await pool.query(
+      `INSERT INTO letters (title, body, from_line, burden, source, approved)
+       VALUES ($1, $2, $3, $4, 'community', false) RETURNING id`,
+      [title.trim(), JSON.stringify(paragraphs), from_line.trim(), burden]
     );
-    return { id: result.lastInsertRowid };
+    return { id: rows[0].id };
   },
 
 };

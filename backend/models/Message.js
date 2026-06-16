@@ -1,58 +1,71 @@
 /* ============================================================
-   Message.js — data access for messages table
-   Messages are the short notes left in Section 7
-   and received in Section 6
+   Message.js — PostgreSQL
 ============================================================ */
-const db = require('../config/db');
+const pool = require('../config/db');
 
 const Message = {
 
-  /* Get one random message for a burden, exclude one id if given */
-  getRandom(burden, excludeId = null) {
+  async getRandom(burden, excludeId = null) {
     const query = excludeId
       ? `SELECT id, content, burden, source, hearts
-         FROM messages WHERE burden = ? AND id != ?
+         FROM messages WHERE burden = $1 AND id != $2
          ORDER BY RANDOM() LIMIT 1`
       : `SELECT id, content, burden, source, hearts
-         FROM messages WHERE burden = ?
+         FROM messages WHERE burden = $1
          ORDER BY RANDOM() LIMIT 1`;
 
     const params = excludeId ? [burden, excludeId] : [burden];
-    return db.prepare(query).get(...params) || null;
+    const { rows } = await pool.query(query, params);
+
+    /* fallback — if exclude left nothing, get any message */
+    if (!rows[0] && excludeId) {
+      const fallback = await pool.query(
+        `SELECT id, content, burden, source, hearts
+         FROM messages WHERE burden = $1
+         ORDER BY RANDOM() LIMIT 1`,
+        [burden]
+      );
+      return fallback.rows[0] || null;
+    }
+
+    return rows[0] || null;
   },
 
-  /* Get all messages for the Silent Room (Section 8) */
-  getAll(limit = 60) {
-    return db.prepare(`
-      SELECT id, content, burden, source, hearts
-      FROM   messages
-      ORDER  BY RANDOM()
-      LIMIT  ?
-    `).all(limit);
+  async getAll(limit = 60) {
+    const { rows } = await pool.query(
+      `SELECT id, content, burden, source, hearts
+       FROM messages ORDER BY RANDOM() LIMIT $1`,
+      [limit]
+    );
+    return rows;
   },
 
-  /* Save a new message */
-  create({ content, burden }) {
-    const result = db.prepare(`
-      INSERT INTO messages (content, burden, source)
-      VALUES (?, ?, 'community')
-    `).run(content.trim(), burden);
-    return { id: result.lastInsertRowid };
+  async create({ content, burden }) {
+    const { rows } = await pool.query(
+      `INSERT INTO messages (content, burden, source)
+       VALUES ($1, $2, 'community') RETURNING id`,
+      [content.trim(), burden]
+    );
+    return { id: rows[0].id };
   },
 
-  /* Heart a message — one per IP */
-  addHeart(messageId, ipHash) {
+  async addHeart(messageId, ipHash) {
+    const client = await pool.connect();
     try {
-      db.prepare(`
-        INSERT INTO message_hearts (message_id, ip_hash) VALUES (?, ?)
-      `).run(messageId, ipHash);
-      db.prepare(`
-        UPDATE messages SET hearts = hearts + 1 WHERE id = ?
-      `).run(messageId);
-      const row = db.prepare(`SELECT hearts FROM messages WHERE id = ?`).get(messageId);
-      return { ok: true, hearts: row.hearts };
-    } catch {
-      return { ok: false, reason: 'already_hearted' };
+      await client.query(
+        `INSERT INTO message_hearts (message_id, ip_hash) VALUES ($1, $2)`,
+        [messageId, ipHash]
+      );
+      const { rows } = await client.query(
+        `UPDATE messages SET hearts = hearts + 1 WHERE id = $1 RETURNING hearts`,
+        [messageId]
+      );
+      return { ok: true, hearts: rows[0].hearts };
+    } catch (err) {
+      if (err.code === '23505') return { ok: false, reason: 'already_hearted' };
+      throw err;
+    } finally {
+      client.release();
     }
   },
 

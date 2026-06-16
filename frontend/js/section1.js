@@ -167,12 +167,12 @@ function initS2() {
 }
 
 /* ============================================================
-   SECTION 3
+   SECTION 3 — with "There's more to carry" button
 ============================================================ */
 async function loadStories(burden) {
   const panel = document.getElementById('stories-panel');
   if (!panel) return;
-
+ 
   panel.innerHTML = Array(4).fill(0).map(() => `
     <div class="story-skeleton" aria-hidden="true">
       <div class="skeleton-line"></div>
@@ -180,34 +180,28 @@ async function loadStories(burden) {
       <div class="skeleton-line"></div>
     </div>
   `).join('');
-
+ 
   const data    = await API.getStories(burden);
   const perPage = 6;
-  let   currentPage = 0;
-
+  let   shown   = 0;
+ 
   panel.innerHTML = '';
-  const totalPages = Math.ceil(data.length / perPage);
-
-  const pg = document.createElement('div');
-  pg.className = 's3-pagination';
-  pg.setAttribute('aria-hidden', 'true');
-  panel.appendChild(pg);
-
-  const dots = [];
-  if (data.length > perPage) {
-    for (let i = 0; i < totalPages; i++) {
-      const dot = document.createElement('button');
-      dot.className = 's3-pg-dot' + (i === 0 ? ' active' : '');
-      dot.setAttribute('aria-label', `Page ${i + 1}`);
-      dot.addEventListener('click', () => { currentPage = i; renderPage(i); });
-      dots.push(dot);
-      pg.appendChild(dot);
-    }
-  }
-
-  function renderPage(page) {
-    panel.querySelectorAll('.story-card').forEach(c => c.remove());
-    const slice = data.slice(page * perPage, (page + 1) * perPage);
+ 
+  /* Load more button — created once, appended after each batch */
+  const loadMoreWrap = document.createElement('div');
+  loadMoreWrap.className = 's3-load-more-wrap';
+ 
+  const loadMoreBtn = document.createElement('button');
+  loadMoreBtn.className = 's3-load-more-btn';
+  loadMoreBtn.innerHTML = `
+    <span>There's more to carry</span>
+    <span class="s3-load-more-arrow" aria-hidden="true">↓</span>
+  `;
+  loadMoreWrap.appendChild(loadMoreBtn);
+ 
+  function renderBatch() {
+    const slice = data.slice(shown, shown + perPage);
+ 
     slice.forEach((s, i) => {
       const card = document.createElement('article');
       card.className = 'story-card';
@@ -225,22 +219,55 @@ async function loadStories(burden) {
         </div>
         <span class="story-quote-mark" aria-hidden="true">"</span>
       `;
-      panel.insertBefore(card, pg);
+ 
+      /* Insert before the load more wrap so it stays at the bottom */
+      panel.insertBefore(card, loadMoreWrap);
       setTimeout(() => card.classList.add('visible'), 80 + i * 120);
     });
-    dots.forEach((d, i) => d.classList.toggle('active', i === page));
+ 
+    shown += slice.length;
+ 
+    /* Show or hide the button depending on whether more stories remain */
+    if (shown >= data.length) {
+      loadMoreWrap.classList.add('exhausted');
+      loadMoreBtn.innerHTML = `<span>You've read them all. You're not alone.</span>`;
+      loadMoreBtn.disabled = true;
+    } else {
+      loadMoreWrap.classList.remove('exhausted');
+      loadMoreBtn.innerHTML = `
+        <span>There's more to carry</span>
+        <span class="s3-load-more-arrow" aria-hidden="true">↓</span>
+      `;
+      loadMoreBtn.disabled = false;
+    }
   }
+ 
+ loadMoreBtn.addEventListener('click', () => {
+    renderBatch();
+    announce(`Loaded more stories. ${shown} of ${data.length} shown.`);
+  });
 
-  renderPage(0);
-  announce(`Loaded ${data.length} stories.`);
+  /* Append the wrap FIRST so insertBefore has a valid reference node */
+  panel.appendChild(loadMoreWrap);
+
+  /* First batch */
+  renderBatch();
+
+  /* If everything fits in the first batch, hide the button entirely */
+  if (data.length <= perPage) {
+    loadMoreWrap.style.display = 'none';
+  }
+ 
+  announce(`Loaded ${Math.min(perPage, data.length)} of ${data.length} stories.`);
 }
-
+ 
 async function updateCount(burden) {
   const el = document.getElementById('burden-count');
   if (!el) return;
   const total = await API.getStoryCount(burden);
   el.textContent = total.toLocaleString();
 }
+ 
 
 /* ============================================================
    SECTION 4

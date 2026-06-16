@@ -10,16 +10,15 @@ const Letter = require('../models/Letter');
 const crypto = require('crypto');
 const { submitLimit, heartLimit } = require('../middleware/rateLimit');
 
-/* Hash IP for anonymous heart tracking */
 function hashIP(ip) {
   return crypto.createHash('sha256').update(ip + 'mmh_salt_2024').digest('hex');
 }
 
 /* GET all letters for a burden */
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const { burden = 'financial' } = req.query;
-    const letters = Letter.getByBurden(burden);
+    const letters = await Letter.getByBurden(burden);
     res.json({ ok: true, data: letters });
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
@@ -27,10 +26,10 @@ router.get('/', (req, res) => {
 });
 
 /* GET one random letter */
-router.get('/random', (req, res) => {
+router.get('/random', async (req, res) => {
   try {
     const { burden = 'financial', exclude } = req.query;
-    const letter = Letter.getRandom(burden, exclude ? parseInt(exclude) : null);
+    const letter = await Letter.getRandom(burden, exclude ? parseInt(exclude) : null);
     if (!letter) return res.status(404).json({ ok: false, error: 'No letter found.' });
     res.json({ ok: true, data: letter });
   } catch (err) {
@@ -39,11 +38,11 @@ router.get('/random', (req, res) => {
 });
 
 /* POST heart a letter */
-router.post('/:id/heart', heartLimit, (req, res) => {
+router.post('/:id/heart', heartLimit, async (req, res) => {
   try {
     const letterId = parseInt(req.params.id);
     const ipHash   = hashIP(req.ip);
-    const result   = Letter.addHeart(letterId, ipHash);
+    const result   = await Letter.addHeart(letterId, ipHash);
     res.json(result);
   } catch (err) {
     res.status(500).json({ ok: false, error: err.message });
@@ -51,7 +50,7 @@ router.post('/:id/heart', heartLimit, (req, res) => {
 });
 
 /* POST submit a community letter */
-router.post('/', submitLimit, (req, res) => {
+router.post('/', submitLimit, async (req, res) => {
   try {
     const { title, body, from_line = 'Anonymous', burden } = req.body;
 
@@ -61,9 +60,8 @@ router.post('/', submitLimit, (req, res) => {
     if (!body || body.trim().length < 50)
       return res.status(400).json({ ok: false, error: 'Letter is too short.' });
 
-    /* Body stored as array of paragraphs */
     const paragraphs = body.split('\n').map(p => p.trim()).filter(Boolean);
-    const result = Letter.create({ title, body: paragraphs, from_line, burden });
+    const result = await Letter.create({ title, body: paragraphs, from_line, burden });
 
     res.status(201).json({
       ok: true,

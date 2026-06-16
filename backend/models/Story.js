@@ -1,53 +1,35 @@
 /* ============================================================
-   Story.js — data access for stories table
+   Story.js — PostgreSQL
 ============================================================ */
-const db = require('../config/db');
-
-const VALID_BURDENS = [
-  'financial','family','loneliness','relationship',
-  'career','grief','selfdoubt','lost','fatherhood','other'
-];
+const pool = require('../config/db');
 
 const Story = {
 
-  /* Get approved stories by burden, newest first, limit 20 */
-  getByBurden(burden, limit = 20) {
-    return db.prepare(`
-      SELECT id, content, burden, country, source, created_at
-      FROM   stories
-      WHERE  burden = ? AND approved = 1
-      ORDER  BY created_at DESC
-      LIMIT  ?
-    `).all(burden, limit);
+  async getByBurden(burden, limit = 20) {
+    const { rows } = await pool.query(
+      `SELECT id, content, burden, country, source, created_at
+       FROM stories WHERE burden = $1 AND approved = true
+       ORDER BY created_at DESC LIMIT $2`,
+      [burden, limit]
+    );
+    return rows;
   },
 
-  /* Get seeded stories only (source = 'seeded') for initial load */
-  getSeeded(burden) {
-    return db.prepare(`
-      SELECT id, content, burden, country, source, created_at
-      FROM   stories
-      WHERE  burden = ? AND source = 'seeded' AND approved = 1
-      ORDER  BY created_at DESC
-    `).all(burden);
+  async countByBurden(burden) {
+    const { rows } = await pool.query(
+      `SELECT COUNT(*)::int as total FROM stories WHERE burden = $1 AND approved = true`,
+      [burden]
+    );
+    return rows[0].total || 0;
   },
 
-  /* Insert a new community story (unapproved by default) */
-  create({ content, burden, country = 'Anonymous' }) {
-    if (!VALID_BURDENS.includes(burden)) throw new Error('Invalid burden');
-    const stmt = db.prepare(`
-      INSERT INTO stories (content, burden, country, source, approved)
-      VALUES (?, ?, ?, 'community', 0)
-    `);
-    const result = stmt.run(content.trim(), burden, country.trim());
-    return { id: result.lastInsertRowid };
-  },
-
-  /* Count total stories per burden (for the live counter) */
-  countByBurden(burden) {
-    return db.prepare(`
-      SELECT COUNT(*) as total FROM stories
-      WHERE burden = ? AND approved = 1
-    `).get(burden).total;
+  async create({ content, burden, country = 'Anonymous' }) {
+    const { rows } = await pool.query(
+      `INSERT INTO stories (content, burden, country, source, approved)
+       VALUES ($1, $2, $3, 'community', true) RETURNING id`,
+      [content.trim(), burden, country.trim()]
+    );
+    return { id: rows[0].id };
   },
 
 };
